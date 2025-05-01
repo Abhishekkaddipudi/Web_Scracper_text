@@ -117,6 +117,22 @@ def index():
         <div id="chapter-content">
             {{ chapter_output | safe }}
         </div>
+                <button id="increment" style="margin-top: 20px; padding: 8px 16px; background-color: #3498db; color: white; border: none; cursor: pointer;">
+            Next
+        </button>
+          <script>
+            document.getElementById('increment').onclick = function() {
+                var startInput = document.getElementById('start');
+                var endInput = document.getElementById('end');
+
+                startInput.value = parseInt(startInput.value) + 10;
+                endInput.value = parseInt(endInput.value) + 10;
+
+                // Submit the form to fetch the next set of chapters
+                document.querySelector('form').submit();
+            };
+        </script>
+
     </body>
     </html>
     """,
