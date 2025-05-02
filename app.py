@@ -18,7 +18,7 @@ def index():
             r = requests.get(URL)
             soup = BeautifulSoup(r.content, "html.parser")
 
-            chapter_heading = soup.find("h4")
+            chapter_heading = soup.find("h2")
             chapter_text = (
                 chapter_heading.get_text(strip=True)
                 if chapter_heading
