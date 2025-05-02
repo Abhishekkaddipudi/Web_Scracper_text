@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chapter Viewer</title>
+<style>
+body {
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    background-color: #fdfcf9;
+    padding: 20px;
+    line-height: 1.8;
+    color: #222;
+    font-weight: 600;
+}
+
+h1, h2 {
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+form {
+    margin-bottom: 30px;
+}
+
+label {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+input[type="number"] {
+    padding: 5px 10px;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+button {
+    padding: 8px 16px;
+    font-size: 16px;
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #1a252f;
+}
+
+#chapter-content {
+    max-width: 800px;
+    margin-top: 20px;
+}
+
+p {
+    font-size: 18px;
+    margin-bottom: 16px;
+}
+</style>
+
+
+</head>
+<body>
+    
+    <form method="POST">
+       
+        <input type="number" name="start" id="start" required value="{{ request.form.get('start', 1) }}">
+        
+        <input type="number" name="end" id="end" required value="{{ request.form.get('end', 10) }}">
+        <button type="submit"></button>
+    </form>
+
+    <div id="chapter-content">
+        {{ chapter_output | safe }}
+    </div>
+            <form method="POST">
+       
+        <input type="number" name="start" id="start" required value="{{ request.form.get('start', 1) }}">
+        
+        <input type="number" name="end" id="end" required value="{{ request.form.get('end', 10) }}">
+        <button type="submit"></button>
+    </form>
+            <button id="increment" style="margin-top: 20px; padding: 8px 16px; background-color: #3498db; color: white; border: none; cursor: pointer;">
+        Next
+    </button>
+      <script>
+        document.getElementById('increment').onclick = function() {
+            var startInput = document.getElementById('start');
+            var endInput = document.getElementById('end');
+
+            startInput.value = parseInt(startInput.value) + 10;
+            endInput.value = parseInt(endInput.value) + 10;
+
+            // Submit the form to fetch the next set of chapters
+            document.querySelector('form').submit();
+        };
+    </script>
+
+</body>
+</html>
