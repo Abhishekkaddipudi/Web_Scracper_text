@@ -1,4 +1,4 @@
-import requests
+import cloudscraper
 from bs4 import BeautifulSoup
 from flask import Flask, render_template, request
 
@@ -11,11 +11,12 @@ def extract_chapter(start, end):
         end = start + 1
     for i in range(start, end + 1):
 
-        URL = f"https://novelbin.com/b/alchemy-emperor-of-the-divine-dao/chapter-{i}"
-        r = requests.get(URL)
-        soup = BeautifulSoup(r.content, "html.parser")
-
-        chapter_heading = soup.find("h2")
+        scraper = cloudscraper.create_scraper()
+        url = "https://novelbin.com/b/alchemy-emperor-of-the-divine-dao/chapter-1"
+        response = scraper.get(url)
+        soup = BeautifulSoup(response.content, "html.parser")
+        # print(soup)
+        chapter_heading = soup.find("h4")
         chapter_text = (
             chapter_heading.get_text(strip=True)
             if chapter_heading
@@ -23,8 +24,10 @@ def extract_chapter(start, end):
         )
 
         content_div = soup.find("div", {"id": "chr-content"})
-        paragraphs = content_div.find_all("p") if content_div else []
+        # print(content_div)
 
+        paragraphs = content_div.find_all("p") if content_div else []
+        # print(paragraphs)
         chapter_output += f"<h2>{chapter_text}</h2>"
         for p in paragraphs:
             text = p.get_text(strip=True)
