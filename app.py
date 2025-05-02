@@ -42,11 +42,11 @@ def extract_chapter(start, end):
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-
+    chapter_output = ""
     if request.method == "POST":
         start = int(request.form.get("start", 1))
         end = int(request.form.get("end", 10))
-    chapter_output = extract_chapter(start=start, end=end)
+        chapter_output = extract_chapter(start=start, end=end)
 
     return render_template(
         "./index.html",
