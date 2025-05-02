@@ -13,7 +13,7 @@ def extract_chapter(start, end):
 
         URL = f"https://novelbin.com/b/alchemy-emperor-of-the-divine-dao/chapter-{i}"
         r = requests.get(URL)
-       soup = BeautifulSoup(r.content, "html.parser")
+        soup = BeautifulSoup(r.content, "html.parser")
 
         chapter_heading = soup.find("h2")
         chapter_text = (
