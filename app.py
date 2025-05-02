@@ -117,6 +117,13 @@ def index():
         <div id="chapter-content">
             {{ chapter_output | safe }}
         </div>
+                <form method="POST">
+           
+            <input type="number" name="start" id="start" required value="{{ request.form.get('start', 1) }}">
+            
+            <input type="number" name="end" id="end" required value="{{ request.form.get('end', 10) }}">
+            <button type="submit"></button>
+        </form>
                 <button id="increment" style="margin-top: 20px; padding: 8px 16px; background-color: #3498db; color: white; border: none; cursor: pointer;">
             Next
         </button>
