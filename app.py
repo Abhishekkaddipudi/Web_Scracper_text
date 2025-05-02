@@ -14,7 +14,7 @@ def index():
         end = int(request.form.get("end", 10))
 
         for i in range(start, end + 1):
-            URL = f"https://novelbin.com/b/nine-star-hegemon-body-arts/chapter-{i}"
+            URL = f"https://novelbin.com/b/martial-world-novel/chapter-{i}"
             r = requests.get(URL)
             soup = BeautifulSoup(r.content, "html.parser")
 
