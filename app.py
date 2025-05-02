@@ -12,7 +12,7 @@ def extract_chapter(start, end):
     for i in range(start, end + 1):
 
         scraper = cloudscraper.create_scraper()
-        url = "https://novelbin.com/b/alchemy-emperor-of-the-divine-dao/chapter-1"
+        url = f"https://novelbin.com/b/alchemy-emperor-of-the-divine-dao/chapter-{i}"
         response = scraper.get(url)
         soup = BeautifulSoup(response.content, "html.parser")
         # print(soup)
