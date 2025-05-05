@@ -36,6 +36,9 @@ def extract_chapter(start, end):
                 == "Enhance your reading experience by removing ads for as low as$1!"
             ):
                 continue
+
+            if "______" in text:
+                continue
             if text == "Translator: BornToBe":
                 continue
             if text:
