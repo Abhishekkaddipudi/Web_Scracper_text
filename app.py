@@ -16,7 +16,7 @@ def extract_chapter(start, end):
         response = scraper.get(url)
         soup = BeautifulSoup(response.content, "html.parser")
         # print(soup)
-        chapter_heading = soup.find("h4")
+        chapter_heading = soup.find("h3")
         chapter_text = (
             chapter_heading.get_text(strip=True)
             if chapter_heading
