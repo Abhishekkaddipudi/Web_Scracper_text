@@ -12,7 +12,7 @@ def extract_chapter(start, end):
     for i in range(start, end + 1):
 
         scraper = cloudscraper.create_scraper()
-        url = f"https://novelbin.com/b/reincarnation-of-the-strongest-sword-god/chapter-{i}"
+        url = f"https://novelbin.com/b/versatile-mage/chapter-{i}"
         response = scraper.get(url)
         soup = BeautifulSoup(response.content, "html.parser")
         # print(soup)
