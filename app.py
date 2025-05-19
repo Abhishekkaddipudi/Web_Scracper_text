@@ -61,12 +61,13 @@ def extract_chapter(start, end):
                 f"<h2>Chapter {i}</h2><p>Error loading chapter: {str(e)}</p>"
             )
 
-    return novel_title, chapters
+    return novel_title if novel_title else "", chapters
 
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     chapters = []
+    novel_title = ""
     if request.method == "POST":
         start = int(request.form.get("start", 1))
         end = int(request.form.get("end", start))

@@ -11,6 +11,11 @@
       --heading-color: #93d2f2;
       --button-bg: #2c3e50;
       --button-text: #ffffff;
+      --header-bg: #1a1a1a;
+      --hamburger-color: #ffffff;
+      --hamburger-active-color: #ffffff;
+      --form-button-bg: #4CAF50;
+      --form-button-hover: #45a049;
     }
 
     body.light-theme {
@@ -19,6 +24,11 @@
       --heading-color: #2c3e50;
       --button-bg: #3498db;
       --button-text: #ffffff;
+      --header-bg: #f0f0f0;
+      --hamburger-color: #333333;
+      --hamburger-active-color: #333333;
+      --form-button-bg: #4CAF50;
+      --form-button-hover: #45a049;
     }
 
     body {
@@ -30,32 +40,12 @@
       font-size: 18px;
       font-weight: 500;
       line-height: 1.8;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     h1, h2, h3 {
       text-align: center;
       color: var(--heading-color);
-    }
-
-    form#range-form {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    form#range-form input[type="number"] {
-      width: 80px;
-      padding: 6px;
-      border: 1px solid #444;
-      border-radius: 4px;
-      background-color: #151b23;
-      color: #d8d8d8;
-    }
-
-    form#range-form button {
-      padding: 6px 12px;
-      border-radius: 4px;
     }
 
     #chapter-container {
@@ -71,14 +61,13 @@
       box-shadow: 0 0 15px rgba(0,0,0,0.4);
     }
 
-    /* Make inner pages scrollable */
     .page {
       position: absolute;
       width: 100%;
       height: 100%;
       padding: 20px;
       box-sizing: border-box;
-      overflow-y: auto;          /* <--- allow vertical scroll */
+      overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       opacity: 0;
       transform: translateX(100%);
@@ -108,6 +97,7 @@
       border: none;
       cursor: pointer;
       border-radius: 6px;
+      transition: opacity 0.3s ease;
     }
 
     button:hover {
@@ -120,26 +110,136 @@
       right: 20px;
       padding: 8px 12px;
       font-size: 16px;
+      z-index: 1002;
+      
+    }
+
+    #header {
+      background-color: var(--header-bg);
+      color: white;
+      padding: 1rem;
+      position: fixed;
+      top: -100%;
+      width: 100%;
+      transition: top 0.3s ease, background-color 0.3s ease;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    #header-content {
+      width: 100%;
+      max-width: 800px;
+    }
+    
+    #header h1 {
+      color: var(--text-color);
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    
+    #range-form {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    #range-form label {
+      color: var(--text-color);
+    }
+    
+    #range-form input {
+      padding: 0.3rem;
+      width: 60px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      border: 1px solid var(--button-bg);
+      border-radius: 4px;
+    }
+    
+    #range-form button {
+      padding: 0.3rem 1rem;
+      background-color: var(--form-button-bg);
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    #range-form button:hover {
+      background-color: var(--form-button-hover);
+    }
+    
+    .hamburger {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 30px;
+      height: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      z-index: 1001;
+    }
+    
+    .hamburger span {
+      display: block;
+      width: 100%;
+      height: 3px;
+      background-color: var(--hamburger-color);
+      transition: all 0.3s ease;
+    }
+    
+    .hamburger.active span {
+      background-color: var(--hamburger-active-color) !important;
+    }
+    
+    .hamburger.active span:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+    
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    
+    .hamburger.active span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+    
+    .content {
+      padding: 2rem;
+      margin-top: 20px;
+    }
+    
+    .header-visible {
+      top: 0 !important;
+    }
+    
+    .body-pushed {
+      margin-top: 50px;
     }
   </style>
 </head>
 <body>
-<h1>{{novel_title}}</h1>
+  <div id="header">
+    <div id="header-content">
+      <!-- Form and h1 will be inserted here by JavaScript -->
+    </div>
+  </div>
+  
+  <div class="hamburger" id="hamburger">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
 
-  <!-- Theme Toggle Button -->
   <button id="theme-toggle">🌙</button>
 
-  <!-- Form to enter start/end chapters -->
-  <form id="range-form" method="POST">
-    <label for="start">Start:</label>
-    <input type="number" name="start" id="start" min="1" value="{{ request.form.get('start', 1) }}" required>
-    <label for="end">End:</label>
-    <input type="number" name="end" id="end" min="1" value="{{ request.form.get('end', start if request.form.get('end') else 10) }}" required>
-    <button type="submit">Load</button>
-  </form>
-
-  <!-- Chapter Pages Container -->
-  <div id="chapter-container">
+  <div id="chapter-container"style="margin-top: 100px;">
     {% for chapter in chapters %}
       <div class="page {% if loop.first %}active{% endif %}">
         {{ chapter | safe }}
@@ -147,7 +247,6 @@
     {% endfor %}
   </div>
 
-  <!-- Navigation -->
   <div class="navigation">
     <button id="prev">⬅ Previous</button>
     <button id="next">Next ➡</button>
@@ -180,21 +279,56 @@
     // Theme toggle logic
     const themeBtn = document.getElementById('theme-toggle');
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-      document.body.classList.add('light-theme');
-    }
-    themeBtn.addEventListener('click', () => {
-      document.body.classList.toggle('light-theme');
-      localStorage.setItem('theme',
-        document.body.classList.contains('light-theme') ? 'light' : 'dark'
-      );
-    });
-    // Auto-theme by time if no preference
-    if (!savedTheme) {
-      const hour = new Date().getHours();
-      if (hour >= 6 && hour < 18) document.body.classList.add('light-theme');
-    }
-  </script>
+    const hamburger = document.getElementById('hamburger');
+    const header = document.getElementById('header');
+    const headerContent = document.getElementById('header-content');
+    const body = document.body;
 
+    // Set initial theme
+    function setInitialTheme() {
+      if (savedTheme === 'light') {
+        document.body.classList.add('light-theme');
+        themeBtn.textContent = '☀️';
+      } else if (!savedTheme) {
+        const hour = new Date().getHours();
+        if (hour >= 6 && hour < 18) {
+          document.body.classList.add('light-theme');
+          themeBtn.textContent = '☀️';
+        }
+      }
+    }
+    setInitialTheme();
+
+    themeBtn.addEventListener('click', () => {
+      const isLight = document.body.classList.toggle('light-theme');
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      themeBtn.textContent = isLight ? '☀️' : '🌙';
+    });
+
+    // Hamburger menu click handler
+    const headerTemplate = `
+      <h1>{{novel_title}}</h1>
+      <form id="range-form" method="POST">
+        <label for="start">Start:</label>
+        <input type="number" name="start" id="start" min="1" value="1" required>
+        <label for="end">End:</label>
+        <input type="number" name="end" id="end" min="1" value="10" required>
+        <button type="submit">Load</button>
+      </form>
+    `;
+
+    let headerVisible = false;
+    
+    hamburger.addEventListener('click', function() {
+      this.classList.toggle('active');
+      header.classList.toggle('header-visible');
+      body.classList.toggle('body-pushed');
+
+      if (!headerVisible) {
+        headerContent.innerHTML = headerTemplate;
+        headerVisible = true;
+      }
+    });
+  </script>
 </body>
 </html>
