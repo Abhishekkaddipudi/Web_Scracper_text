@@ -24,6 +24,7 @@ def extract_chapter(start, end):
                 continue
 
             soup = BeautifulSoup(response.content, "html.parser")
+            novel_title = soup.find("a", class_="novel-title").text
 
             # Accept h2, h3, or h4 as title
             chapter_heading = soup.find(["h2", "h3", "h4"])
@@ -60,7 +61,7 @@ def extract_chapter(start, end):
                 f"<h2>Chapter {i}</h2><p>Error loading chapter: {str(e)}</p>"
             )
 
-    return chapters
+    return novel_title, chapters
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -69,9 +70,9 @@ def index():
     if request.method == "POST":
         start = int(request.form.get("start", 1))
         end = int(request.form.get("end", start))
-        chapters = extract_chapter(start=start, end=end)
+        novel_title, chapters = extract_chapter(start=start, end=end)
 
-    return render_template("index.html", chapters=chapters)
+    return render_template("index.html", novel_title=novel_title, chapters=chapters)
 
 
 if __name__ == "__main__":
