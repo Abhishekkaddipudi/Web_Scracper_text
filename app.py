@@ -6,58 +6,72 @@ app = Flask(__name__)
 
 
 def extract_chapter(start, end):
-    chapter_output = ""
+    chapters = []
+
     if start > end:
         end = start + 1
+
     for i in range(start, end + 1):
+        try:
+            scraper = cloudscraper.create_scraper()
+            url = f"https://novelbin.com/b/versatile-mage/chapter-{i}"
+            response = scraper.get(url)
 
-        scraper = cloudscraper.create_scraper()
-        url = f"https://novelbin.com/b/versatile-mage/chapter-{i}"
-        response = scraper.get(url)
-        soup = BeautifulSoup(response.content, "html.parser")
-        # print(soup)
-        chapter_heading = soup.find("h3")
-        chapter_text = (
-            chapter_heading.get_text(strip=True)
-            if chapter_heading
-            else f"Chapter {i} (Title not found)"
-        )
-
-        content_div = soup.find("div", {"id": "chr-content"})
-        # print(content_div)
-
-        paragraphs = content_div.find_all("p") if content_div else []
-        # print(paragraphs)
-        chapter_output += f"<h2>{chapter_text}</h2>"
-        for p in paragraphs:
-            text = p.get_text(strip=True)
-            if (
-                text
-                == "Enhance your reading experience by removing ads for as low as$1!"
-            ):
+            if response.status_code != 200:
+                chapters.append(
+                    f"<h2>Chapter {i}</h2><p>Failed to load chapter content.</p>"
+                )
                 continue
 
-            if "______" in text:
-                continue
-            if text == "Translator: BornToBe":
-                continue
-            if text:
-                chapter_output += f"<p>{text}</p>"
-    return chapter_output
+            soup = BeautifulSoup(response.content, "html.parser")
+
+            # Accept h2, h3, or h4 as title
+            chapter_heading = soup.find(["h2", "h3", "h4"])
+            chapter_title = (
+                chapter_heading.get_text(strip=True)
+                if chapter_heading
+                else f"Chapter {i} (Title not found)"
+            )
+
+            content_div = soup.find("div", {"id": "chr-content"})
+            paragraphs = content_div.find_all("p") if content_div else []
+
+            chapter_html = f"<h2>{chapter_title}</h2>"
+            for p in paragraphs:
+                text = p.get_text(strip=True)
+                if not text or any(
+                    skip in text
+                    for skip in [
+                        "Enhance your reading experience",
+                        "Translator: BornToBe",
+                        "______",
+                    ]
+                ):
+                    continue
+                chapter_html += f"<p>{text}</p>"
+
+            if not paragraphs:
+                chapter_html += "<p>No content found.</p>"
+
+            chapters.append(chapter_html)
+
+        except Exception as e:
+            chapters.append(
+                f"<h2>Chapter {i}</h2><p>Error loading chapter: {str(e)}</p>"
+            )
+
+    return chapters
 
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    chapter_output = ""
+    chapters = []
     if request.method == "POST":
         start = int(request.form.get("start", 1))
-        end = int(request.form.get("end", 10))
-        chapter_output = extract_chapter(start=start, end=end)
+        end = int(request.form.get("end", start))
+        chapters = extract_chapter(start=start, end=end)
 
-    return render_template(
-        "./index.html",
-        chapter_output=chapter_output,
-    )
+    return render_template("index.html", chapters=chapters)
 
 
 if __name__ == "__main__":

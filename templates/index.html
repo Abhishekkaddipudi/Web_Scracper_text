@@ -37,12 +37,33 @@
       color: var(--heading-color);
     }
 
+    form#range-form {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    form#range-form input[type="number"] {
+      width: 80px;
+      padding: 6px;
+      border: 1px solid #444;
+      border-radius: 4px;
+      background-color: #151b23;
+      color: #d8d8d8;
+    }
+
+    form#range-form button {
+      padding: 6px 12px;
+      border-radius: 4px;
+    }
+
     #chapter-container {
       perspective: 1000px;
       width: 100%;
       max-width: 700px;
       height: 500px;
-      margin: 40px auto;
+      margin: 0 auto;
       position: relative;
       overflow: hidden;
       border-radius: 12px;
@@ -50,12 +71,15 @@
       box-shadow: 0 0 15px rgba(0,0,0,0.4);
     }
 
+    /* Make inner pages scrollable */
     .page {
       position: absolute;
       width: 100%;
       height: 100%;
       padding: 30px;
       box-sizing: border-box;
+      overflow-y: auto;          /* <--- allow vertical scroll */
+      -webkit-overflow-scrolling: touch;
       opacity: 0;
       transform: translateX(100%);
       transition: all 0.6s ease;
@@ -106,12 +130,22 @@
   <!-- Theme Toggle Button -->
   <button id="theme-toggle">🌙 Toggle Theme</button>
 
+  <!-- Form to enter start/end chapters -->
+  <form id="range-form" method="POST">
+    <label for="start">Start:</label>
+    <input type="number" name="start" id="start" min="1" value="{{ request.form.get('start', 1) }}" required>
+    <label for="end">End:</label>
+    <input type="number" name="end" id="end" min="1" value="{{ request.form.get('end', start if request.form.get('end') else 10) }}" required>
+    <button type="submit">Load</button>
+  </form>
+
   <!-- Chapter Pages Container -->
   <div id="chapter-container">
-    <div class="page active">Chapter 1: Once upon a time...</div>
-    <div class="page">Chapter 2: The journey continues...</div>
-    <div class="page">Chapter 3: Challenges arise...</div>
-    <div class="page">Chapter 4: Triumph and ending.</div>
+    {% for chapter in chapters %}
+      <div class="page {% if loop.first %}active{% endif %}">
+        {{ chapter | safe }}
+      </div>
+    {% endfor %}
   </div>
 
   <!-- Navigation -->
@@ -121,15 +155,13 @@
   </div>
 
   <script>
+    // Page navigation
     const pages = document.querySelectorAll('.page');
     let currentPage = 0;
 
     function showPage(index) {
       pages.forEach((page, i) => {
-        page.classList.remove('active');
-        if (i === index) {
-          page.classList.add('active');
-        }
+        page.classList.toggle('active', i === index);
       });
     }
 
@@ -139,7 +171,6 @@
         showPage(currentPage);
       }
     };
-
     document.getElementById('prev').onclick = () => {
       if (currentPage > 0) {
         currentPage--;
@@ -150,23 +181,19 @@
     // Theme toggle logic
     const themeBtn = document.getElementById('theme-toggle');
     const savedTheme = localStorage.getItem('theme');
-
     if (savedTheme === 'light') {
       document.body.classList.add('light-theme');
     }
-
     themeBtn.addEventListener('click', () => {
       document.body.classList.toggle('light-theme');
-      const isLight = document.body.classList.contains('light-theme');
-      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      localStorage.setItem('theme',
+        document.body.classList.contains('light-theme') ? 'light' : 'dark'
+      );
     });
-
-    // Optional: auto-theme based on time
+    // Auto-theme by time if no preference
     if (!savedTheme) {
       const hour = new Date().getHours();
-      if (hour >= 6 && hour < 18) {
-        document.body.classList.add('light-theme');
-      }
+      if (hour >= 6 && hour < 18) document.body.classList.add('light-theme');
     }
   </script>
 
