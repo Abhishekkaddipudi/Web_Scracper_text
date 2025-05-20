@@ -14,7 +14,7 @@ def extract_chapter(start, end):
     for i in range(start, end + 1):
         try:
             scraper = cloudscraper.create_scraper()
-            url = f"https://novelbin.com/b/versatile-mage/chapter-{i}"
+            url = f"https://novelbin.com/b/infinite-mana-in-the-apocalypse/chapter-{i}"
             response = scraper.get(url)
 
             if response.status_code != 200:
