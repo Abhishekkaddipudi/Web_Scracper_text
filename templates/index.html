@@ -251,8 +251,11 @@
  
 
   <div id="chapter-container"style="margin-top: 50px;">
-    
-        {{ chapters | safe }}
+    {% for chapter in chapters %}
+      <div class="page {% if loop.first %}active{% endif %}">
+        {{ chapter | safe }}
+      </div>
+    {% endfor %}
     
   </div>
 
