@@ -271,8 +271,8 @@
     let currentPage = 0;
 
     function showPage(index) {
-      pages.forEach((page) => {
-        page.classList.toggle('active');
+      pages.forEach((page, i) => {
+        page.classList.toggle('active', i === index);
       });
     }
 
