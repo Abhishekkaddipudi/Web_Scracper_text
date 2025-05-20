@@ -271,11 +271,13 @@
     let currentPage = 0;
 
     function showPage(index) {
-      pages.forEach((page, i) => {
-        page.classList.toggle('active', i === index);
-      });
-    }
+  // make sure every page stays visible
+  pages.forEach(page => page.classList.add('active'));
 
+  // then scroll smoothly to the "current" one
+  pages[index].scrollIntoView({ behavior: 'smooth' });
+    }
+    
     document.getElementById('next').onclick = () => {
       if (currentPage < pages.length - 1) {
         currentPage++;
