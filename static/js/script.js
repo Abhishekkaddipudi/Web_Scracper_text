@@ -48,14 +48,14 @@
 
   if (!headerVisible) {
   const dataTag = document.getElementById("data");
-  const { start, end } = JSON.parse(dataTag.textContent);
+  const { start, end,novel_title } = JSON.parse(dataTag.textContent);
 
 
     const currentStart = start || 1;
     const currentEnd = end || currentStart + 9;
 
     const headerTemplate = `
-      <h1>{{novel_title}}</h1>
+      <h1>${novel_title}</h1>
       <form id="range-form" method="POST">
         <label for="start">Start:</label>
         <input type="number" name="start" id="start" min="1" value="${currentStart}" required>
