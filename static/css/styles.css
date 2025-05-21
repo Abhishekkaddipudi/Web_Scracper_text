@@ -83,20 +83,6 @@
       
     }
 
-    button {
-      background-color: var(--button-bg);
-      color: var(--button-text);
-      padding: 10px 16px;
-      font-size: 16px;
-      border: none;
-      cursor: pointer;
-      border-radius: 6px;
-      transition: opacity 0.3s ease;
-    }
-
-    button:hover {
-      opacity: 0.9;
-    }
 
     #theme-toggle {
       position: relative;
@@ -155,18 +141,22 @@
       border-radius: auto;
     }
     
-    #range-form button {
-      padding: 0.3rem 1rem;
-      background-color: var(--form-button-bg);
-      color: white;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    width: fit-content;
+    button {
+    background-color: transparent;
+    border: 2px solid var(--button-bg); /* Cyan border */
+    border-radius: 8px; /* Rounded corners */
+    color: var(--button-bg); 
+    cursor: pointer;
+    outline: none; 
+    transition: background-color 0.3s, transform 0.3s;
+          padding: 10px 16px;
+      font-size: 16px;
     }
     
-    #range-form button:hover {
-      background-color: var(--form-button-hover);
+    button:hover {
+         background-color: var(--button-bg); /* Change background on hover */
+    color: white; /* Change text color on hover */
+    transform: scale(1.1); /
     }
     
     .hamburger {
@@ -194,35 +184,8 @@
       cursor: pointer;
       z-index: 1001;
 }
-.next-button {
-    background-color: transparent;
-    border: 2px solid var(--button-bg); /* Cyan border */
-    border-radius: 8px; /* Rounded corners */
-    color: var(--button-bg); 
-    cursor: pointer;
-    outline: none; 
-    transition: background-color 0.3s, transform 0.3s; 
-}
-.next-button:hover {
-    background-color: var(--button-bg); /* Change background on hover */
-    color: white; /* Change text color on hover */
-    transform: scale(1.1); /* Scale up on hover */
-}
-.previous-button {
-    background-color: transparent;
-    border: 2px solid var(--button-bg); /* Cyan border */
-    border-radius: 8px; /* Rounded corners */
-    color: var(--button-bg); 
-    cursor: pointer;
-    outline: none; 
-    transition: background-color 0.3s, transform 0.3s; 
-}
-.previous-button:hover {
-    background-color: var(--button-bg); /* Change background on hover */
-    color: white; /* Change text color on hover */
-    transform: scale(1.1); /* Scale up on hover */
-}
-   
+
+
     .hamburger span {
       display: block;
       width: 100%;
