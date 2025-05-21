@@ -7,7 +7,7 @@
       --header-bg: #1a1a1a;
       --hamburger-color: #ffffff;
       --hamburger-active-color: #ffffff;
-      --form-button-bg: #4CAF50;
+      --form-button-bg: #2c3e50;
       --form-button-hover: #45a049;
       
     }
@@ -143,9 +143,9 @@
     
     button {
     background-color: transparent;
-    border: 2px solid var(--button-bg); /* Cyan border */
+    border: 2px solid var(--form-button-bg); /* Cyan border */
     border-radius: 8px; /* Rounded corners */
-    color: var(--button-bg); 
+    color: var(--form-button-bg); 
     cursor: pointer;
     outline: none; 
     transition: background-color 0.3s, transform 0.3s;
@@ -154,7 +154,7 @@
     }
     
     button:hover {
-         background-color: var(--button-bg); /* Change background on hover */
+         background-color: var(--form-button-bg); /* Change background on hover */
     color: white; /* Change text color on hover */
     transform: scale(1.1); /
     }
