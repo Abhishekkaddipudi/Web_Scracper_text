@@ -22,6 +22,11 @@
 
  <div class="navigation">
 <button id="theme-toggle">🌙</button>
+  <a href="{{ url_for('nav_page') }}"
+     id="back-to-menu-btn">
+     🔙
+  </a>
+
 </div>
 
   <div id="chapter-container"style="margin-top: 50px;">
@@ -32,6 +37,7 @@
     {% endfor %}
     
   </div>
+
 <script id="data" type="application/json">
   {{ {'start': start, 'end': end,'novel_title':novel_title} | tojson }}
   

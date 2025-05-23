@@ -66,6 +66,7 @@
           <button type="button" class="previous-button">&gt;</button>
           <button type="submit">Load</button>
         </div>
+        
       </form>
     `;
 

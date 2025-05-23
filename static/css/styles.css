@@ -78,7 +78,7 @@
       display: flex;
       justify-content:flex-end;
       align-items:end;
-          margin: 0 auto;
+          margin: 0;
       position: relative;
       
     }
@@ -149,7 +149,7 @@
     cursor: pointer;
     outline: none; 
     transition: background-color 0.3s, transform 0.3s;
-          padding: 10px 16px;
+          padding: 9px 16px;
       font-size: 16px;
     }
     
@@ -222,3 +222,23 @@
     .body-pushed {
       margin-top: 280px;
     }
+   #back-to-menu-btn {
+    text-decoration: none;
+    background-color: transparent;
+    border: 2px solid var(--form-button-bg); /* Cyan border */
+    border-radius: 8px; /* Rounded corners */
+    color: var(--form-button-bg); 
+    cursor: pointer;
+    outline: none; 
+    transition: background-color 0.3s, transform 0.3s;
+padding: 7px 11px;
+    font-size: 14px;
+    margin-left: 10px;
+    }
+    
+   #back-to-menu-btn:hover {
+         background-color: var(--form-button-bg); /* Change background on hover */
+    color: white; /* Change text color on hover */
+    transform: scale(1.1); /
+    }
+    
