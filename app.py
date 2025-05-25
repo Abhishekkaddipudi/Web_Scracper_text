@@ -3,7 +3,7 @@ from auth import requires_auth
 from config import load_config, save_config, URL_LIST, CONFIG_PATH
 from scraper import extract_chapter
 from file_server import register_file_routes
-from url_extractor import build_url
+
 import os
 
 app = Flask(__name__)
@@ -48,8 +48,7 @@ def create_app():
 
 
 if __name__ == "__main__":
-    if not os.path.exists(URL_LIST):
-        build_url()
+
     app = create_app()
 
     if not os.path.exists(CONFIG_PATH):
