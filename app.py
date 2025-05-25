@@ -116,15 +116,13 @@ def extract_chapter(start, end):
             paras = body.find_all("p") if body else []
 
             html = f"<h2>{chap_title}</h2>"
-            for p in paras:
-                text = p.get_text(strip=True)
-                if text and not any(
-                    skip in text
-                    for skip in ["Enhance your reading", "Translator:", "______"]
-                ):
-                    html += f"<p>{text}</p>"
+            # print(paras)
+
             if not paras:
                 html += "<p>No content found.</p>"
+            else:
+                paras = paras[:-1]
+                html += "".join(str(p) for p in paras)
 
             chapters.append(html)
 
