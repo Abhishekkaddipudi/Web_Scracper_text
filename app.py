@@ -16,7 +16,7 @@ from flask import (
 
 app = Flask(__name__)
 
-# ─── Configuration ─────────────────────────────────────────────────────────────
+# ─── Configuration ───────────────────────────────────────────────────────
 CONFIG_PATH = "config.json"
 UPLOAD_FOLDER = "shared"
 ALLOWED_EXTS = {"txt", "pdf", "png", "jpg", "jpeg", "gif", "zip", "py", "csv"}
@@ -26,7 +26,9 @@ PASSWORD = "1234"  # <<< and me!
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
-# ─── Basic Auth ────────────────────────────────────────────────────────────────
+# ─── Basic Auth ────────────────────────────────────────────────
+
+
 def check_auth(u, p):
     return u == USERNAME and p == PASSWORD
 
@@ -50,7 +52,9 @@ def requires_auth(f):
     return wrapper
 
 
-# ─── Config I/O ────────────────────────────────────────────────────────────────
+# ─── Config I/O ──────────────────────────────────────────────
+
+
 def load_config():
     if not os.path.exists(CONFIG_PATH):
         return {"start": 1, "end": 10}
@@ -67,56 +71,83 @@ def save_config(s, e):
         json.dump({"start": s, "end": e}, f)
 
 
-# ─── Novel Extraction ─────────────────────────────────────────────────────────
+# ─── Novel Extraction (READ NOW then next_chap links) ────────────────────────
+
+
 def extract_chapter(start, end):
     chapters = []
     novel_title = ""
-    if start > end:
-        end = start + 1
 
-    for i in range(start, end + 1):
+    base = "https://novelbin.com/b/reincarnated-as-an-energy-with-a-system-novel"
+    scraper = cloudscraper.create_scraper()
+
+    # Try to find true starting URL
+    try:
+        r0 = scraper.get(base)
+        if r0.status_code == 200:
+            soup0 = BeautifulSoup(r0.content, "html.parser")
+            read_now = soup0.find("a", class_="btn btn-danger btn-read-now")
+            current_url = (
+                read_now["href"]
+                if read_now and read_now.get("href")
+                else f"{base}/chapter-{start}"
+            )
+        else:
+            current_url = f"{base}/chapter-{start}"
+    except:
+        current_url = f"{base}/chapter-{start}"
+
+    for _ in range(start, end + 1):
         try:
-            scraper = cloudscraper.create_scraper()
-            url = f"https://novelbin.com/b/infinite-mana-in-the-apocalypse/chapter-{i}"
-            r = scraper.get(url)
+            r = scraper.get(current_url)
             if r.status_code != 200:
-                chapters.append(f"<h2>Chapter {i}</h2><p>Failed to load.</p>")
-                continue
+                chapters.append(f"<h2>Failed to load</h2><p>{current_url}</p>")
+                break
 
             soup = BeautifulSoup(r.content, "html.parser")
-            tt = soup.find("a", "novel-title")
-            if tt:
-                novel_title = tt.get_text(strip=True)
+            title_tag = soup.find("a", "novel-title")
+            if title_tag:
+                novel_title = title_tag.get_text(strip=True)
 
             heading = soup.find(["h2", "h3", "h4"])
-            title = heading.get_text(strip=True) if heading else f"Chapter {i}"
-            body = soup.find("div", {"id": "chr-content"})
-            ps = body.find_all("p") if body else []
+            chap_title = heading.get_text(strip=True) if heading else "Untitled Chapter"
 
-            html = f"<h2>{title}</h2>"
-            for p in ps:
-                t = p.get_text(strip=True)
-                if not t or any(
-                    skip in t
+            body = soup.find("div", {"id": "chr-content"})
+            paras = body.find_all("p") if body else []
+
+            html = f"<h2>{chap_title}</h2>"
+            for p in paras:
+                text = p.get_text(strip=True)
+                if text and not any(
+                    skip in text
                     for skip in ["Enhance your reading", "Translator:", "______"]
                 ):
-                    continue
-                html += f"<p>{t}</p>"
-            if not ps:
+                    html += f"<p>{text}</p>"
+            if not paras:
                 html += "<p>No content found.</p>"
 
             chapters.append(html)
+
+            next_tag = soup.find("a", id="next_chap")
+            if next_tag and next_tag.get("href"):
+                current_url = next_tag["href"]
+            else:
+                break
         except Exception as e:
-            chapters.append(f"<h2>Chapter {i}</h2><p>Error: {e}</p>")
+            chapters.append(f"<h2>Error</h2><p>{e}</p>")
+            break
+
     return novel_title, chapters
 
 
-# ─── File-Server Helpers ────────────────────────────────────────────────────────
+# ─── File-Server Helpers ─────────────────────────────────────────
+
+
 def allowed_file(fn):
     return "." in fn and fn.rsplit(".", 1)[1].lower() in ALLOWED_EXTS
 
 
-# ─── Routes ────────────────────────────────────────────────────────────────────
+# ─── Routes ────────────────────────────────────────────
 
 
 @app.route("/novel", methods=["GET", "POST"])
@@ -175,7 +206,7 @@ def nav_page():
     return render_template("nav.html")
 
 
-# ─── Start ─────────────────────────────────────────────────────────────────────
+# ─── Start ────────────────────────────────────────────
 if __name__ == "__main__":
     if not os.path.exists(CONFIG_PATH):
         save_config(1, 10)
