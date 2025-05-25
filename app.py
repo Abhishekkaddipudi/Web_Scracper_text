@@ -6,9 +6,11 @@ from file_server import register_file_routes
 from url_extractor import build_url
 import os
 
+app = Flask(__name__)
+
 
 def create_app():
-    app = Flask(__name__)
+
     register_file_routes(app)
 
     @app.route("/")
