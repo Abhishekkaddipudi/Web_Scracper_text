@@ -3,7 +3,7 @@ from auth import requires_auth
 from config import load_config, save_config, URL_LIST, CONFIG_PATH
 from scraper import extract_chapter
 from file_server import register_file_routes
-from Portfolio.app import portfolio_bp
+from sub_portfolio.app import portfolio_bp
 import os
 
 app = Flask(
