@@ -22,4 +22,4 @@ git pull
 else echo "[$(date '+%Y-%m-%d %H:%M:%S %z')] [$$] [git]: Local and remote"
 fi
 
-gunicorn -b 0.0.0.0:8000 "app: create_app()"
+gunicorn -b 0.0.0.0:8000 "app:create_app()"
