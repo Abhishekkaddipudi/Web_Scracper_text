@@ -38,9 +38,6 @@ def create_app():
                 save_config(start, end)
             except ValueError:
                 chapters = ["<p>Invalid input. Please enter numbers.</p>"]
-            with open("novel_title.txt", "w") as nt:
-                nt.write(novel_title,start,end)
-
 
         return render_template(
             "index.html",
