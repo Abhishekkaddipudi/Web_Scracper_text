@@ -64,7 +64,7 @@ def extract_chapter(start: int, end: int, chapters_json_path: str):
             body = soup.find("div", {"id": "chr-content"})
             paras = body.find_all("p")[:-1] if body else []
             html = f"<h2>{chap_title}</h2>" + (
-                "".join(str(p) for p in paras) or "<p>No content.</p>"
+                "".join("<p>"+str(p)+"</p>" for p in paras) or "<p>No content.</p>"
             )
             chapters.append(html)
 

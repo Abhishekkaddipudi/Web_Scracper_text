@@ -1,39 +1,31 @@
-import os
+import requests
+from bs4 import BeautifulSoup
 
-# Folders to ignore
-IGNORE_DIRS = {
-    "__pycache__",
-    ".venv",
-    "venv",
-    "env",
-    ".env",
-    ".git",
-    ".mypy_cache",
-    ".idea",
-    ".pytest_cache",
+# scrapper for shangri la-frontier
+# Target URL
+
+url = "https://ncode.syosetu.com/n6169dz/1/"
+
+# Custom headers to simulate a browser
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
 }
 
+# Fetch the page
+response = requests.get(url, headers=headers)
+soup = BeautifulSoup(response.content, "html.parser")
 
-def print_tree(start_path=".", prefix=""):
-    try:
-        entries = sorted(os.listdir(start_path))
-    except PermissionError:
-        return  # Skip directories we don't have permission to access
+# Extract title
+title_tag = soup.select_one("h1.p-novel__title")
+title = title_tag.get_text(strip=True) if title_tag else "Title not found"
 
-    entries = [e for e in entries if e not in IGNORE_DIRS]
-    entries_count = len(entries)
+# Extract novel text
+text_div = soup.select_one("div.js-novel-text")
+paragraphs = text_div.find_all("p") if text_div else []
+text = "\n".join(p.get_text(strip=True) for p in paragraphs if p.get_text(strip=True))
 
-    for index, entry in enumerate(entries):
-        path = os.path.join(start_path, entry)
-        connector = "├── " if index < entries_count - 1 else "└── "
-        print(prefix + connector + entry)
+# Output
+print("Title:", title)
+print("\n--- Novel Text ---\n")
+print(text)
 
-        if os.path.isdir(path):
-            extension = "│   " if index < entries_count - 1 else "    "
-            print_tree(path, prefix + extension)
-
-
-if __name__ == "__main__":
-    cwd = os.getcwd()
-    print(f"Project structure of: {cwd}")
-    print_tree(cwd)

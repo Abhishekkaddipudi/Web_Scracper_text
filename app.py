@@ -4,6 +4,8 @@ from config import load_config, save_config, URL_LIST, CONFIG_PATH
 from scraper import extract_chapter
 from file_server import register_file_routes
 from sub_portfolio.app import portfolio_bp
+from scrapper.shangri_scraper import scrape_shangri_chapters
+
 import os
 
 app = Flask(
@@ -49,6 +51,29 @@ def create_app():
 
     return app
 
+@app.route("/shangri-la-frontier", methods=["GET", "POST"])
+@requires_auth
+def shangri_la_frontier():
+    start = 1
+    end = 1
+    chapters = []
+    novel_title = "Shangri-La Frontier"
+
+    if request.method == "POST":
+        try:
+            start = int(request.form.get("start", 1))
+            end = int(request.form.get("end", 1))
+            novel_title, chapters = scrape_shangri_chapters(start, end)
+        except Exception as e:
+            chapters.append(f"<p>Error: {e}</p>")
+
+    return render_template(
+        "index.html",
+        novel_title=novel_title,
+        chapters=chapters,
+        start=start,
+        end=end,
+    )
 
 if __name__ == "__main__":
 
