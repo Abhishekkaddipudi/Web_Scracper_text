@@ -7,7 +7,7 @@ import json
 import re
 from git_cmsg import update_novel_title_version
 
-def build_url(url="https://readnovelfull.com/i-have-a-special-cultivation-talent.html#tab-chapters-title",):
+def build_url(url="https://readnovelfull.com/versatile-mage-v1.html#tab-chapters-title",):
     update_novel_title_version(url)
     if 2 > 1:
         options = ChromeOptions()

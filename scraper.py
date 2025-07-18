@@ -63,8 +63,11 @@ def extract_chapter(start: int, end: int, chapters_json_path: str):
             # Chapter body
             body = soup.find("div", {"id": "chr-content"})
             paras = body.find_all("p")[:-1] if body else []
+            
+            filtered_paras = [BeautifulSoup(str(p).replace("_", " "), "html.parser") if "_" in p.get_text() else p for p in paras]
+
             html = f"<h2>{chap_title}</h2>" + (
-                "".join("<p>"+str(p)+"</p>" for p in paras) or "<p>No content.</p>"
+                "".join("<p>"+str(p)+"</p>" for p in filtered_paras) or "<p>No content.</p>"
             )
             chapters.append(html)
 
