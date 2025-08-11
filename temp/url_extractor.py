@@ -7,7 +7,7 @@ import json
 import re
 from git_cmsg import update_novel_title_version
 
-def build_url(url="https://novelbin.com/b/reincarnation-of-the-strongest-sword-god#tab-chapters-titlepythona ",):
+def build_url(url="https://novelbin.com/b/global-lords-hundredfold-increments-starting-with-the-undead-other#tab-chapters-title",):
     update_novel_title_version(url)
     if 2 > 1:
         options = ChromeOptions()
