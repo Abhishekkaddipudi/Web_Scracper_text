@@ -28,10 +28,12 @@ def build_url(url="https://readnovelfull.com/desolate-era.html#tab-chapters-titl
             chapters = []
             elements = driver.find_elements(By.CSS_SELECTOR, "ul.list-chapter li a")
             print("---------------building url-------------")
+            chapter_number=0
             for a_tag in elements:
                 href = a_tag.get_attribute("href")
-                title = a_tag.get_attribute("title")
-                match = re.search(r"Chapter (\d+)", title)
+                #title = a_tag.get_attribute("title")
+                #match = re.search(r"Chapter (\d+)", title)
+                """
                 if match:
                     chapter_number = match.group(1)
                 else:
@@ -41,6 +43,8 @@ def build_url(url="https://readnovelfull.com/desolate-era.html#tab-chapters-titl
                     else:
                         print(match," ",title," ",href)
                         chapter_number = "unknown"
+                """
+                chapter_number+=1
 
                 chapters.append({"chapter_number": chapter_number, "url": href})
             print("--------------saving chapters to json-------------")
