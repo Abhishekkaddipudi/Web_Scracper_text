@@ -7,7 +7,7 @@ import json
 
 from git_cmsg import update_novel_title_version
 
-def build_url(url="https://novelbin.me/novel-book/my-augmented-statuses-have-unlimited-duration#tab-chapters-title",):
+def build_url(url="https://readnovelfull.com/supreme-star-card-master.html#tab-chapters-title",):
     update_novel_title_version(url)
     if 2 > 1:
         options = ChromeOptions()
